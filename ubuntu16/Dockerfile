@@ -5,7 +5,7 @@ ENV HOME /root
 
 RUN apt-get update \
     && apt-get -qq update \
-    && apt-get -y install git curl openssh-server \
+    && apt-get -y install sudo git curl openssh-server \
     && mkdir /var/run/sshd \
     && echo 'root:root' | chpasswd \
     && sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \

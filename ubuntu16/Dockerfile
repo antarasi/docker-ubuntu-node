@@ -19,7 +19,7 @@ RUN apt-get install -y ufw
 
 RUN node -v && npm -v
 
-RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'root@ubuntu14'
+RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'root@ubuntu16'
 
 CMD ["/bin/bash"]
 WORKDIR /project

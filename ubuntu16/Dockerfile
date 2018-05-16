@@ -21,6 +21,10 @@ RUN node -v && npm -v
 
 RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'root@ubuntu16'
 
+#allow services to start automatically from this point
+#https://askubuntu.com/questions/365911/why-the-services-do-not-start-at-installation
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
+
 CMD ["/bin/bash"]
 WORKDIR /project
 VOLUME ["/project"]

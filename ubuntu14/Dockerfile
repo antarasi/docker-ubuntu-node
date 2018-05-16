@@ -2,6 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER ANTARA IT Systems "contact@antara.pl"
 
 ENV HOME /root
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get -qq update \

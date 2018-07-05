@@ -1,16 +1,12 @@
 FROM ubuntu:14.04
 MAINTAINER ANTARA IT Systems "contact@antara.pl"
 
-ENV HOME /root
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get -qq update \
     && apt-get -y install sudo git curl openssh-server \
-    && mkdir /var/run/sshd \
-    && echo 'root:root' | chpasswd \
-    && sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
-    && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+    && mkdir /var/run/sshd
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - \
     && apt-get update && apt-get install -y nodejs \
@@ -20,11 +16,21 @@ RUN apt-get install -y ufw
 
 RUN node -v && npm -v
 
-RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'root@ubuntu14'
+RUN useradd -ms /bin/bash ubuntu \
+    && echo 'root:root' | chpasswd \
+    && echo 'ubuntu:ubuntu' | chpasswd \
+    # SSH login fix. Otherwise user is kicked off after login
+    && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 #allow services to start automatically from this point
 #https://askubuntu.com/questions/365911/why-the-services-do-not-start-at-installation
 RUN printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
+
+USER ubuntu
+
+RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'ubuntu@ubuntu14'
+
+USER root
 
 CMD ["/bin/bash"]
 WORKDIR /project

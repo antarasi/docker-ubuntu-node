@@ -33,8 +33,7 @@ RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'ubuntu@ubuntu14'
 USER root
 
 CMD ["/bin/bash"]
-WORKDIR /project
-VOLUME ["/project"]
+VOLUME ["/root"]
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

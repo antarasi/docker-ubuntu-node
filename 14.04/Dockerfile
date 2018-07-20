@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:14.04
 MAINTAINER ANTARA IT Systems "contact@antara.pl"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -22,13 +22,16 @@ RUN useradd -ms /bin/bash ubuntu \
     # SSH login fix. Otherwise user is kicked off after login
     && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 #allow services to start automatically from this point
 #https://askubuntu.com/questions/365911/why-the-services-do-not-start-at-installation
 RUN printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
 USER ubuntu
 
-RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'ubuntu@ubuntu16'
+RUN ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -b 4096 -N '' -C 'ubuntu@ubuntu:14.04'
 
 USER root
 
